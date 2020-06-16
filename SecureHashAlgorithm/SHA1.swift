@@ -148,11 +148,9 @@ class SHA1 : Convertible {
         for i in H{
             messageDigest! += "\(i.hex)"
         }
-        print(messageDigest!)
     }
     func leftrotate(input : Int, times : Int)->Int{
-        let nr : UInt32 = UInt32(input)
-        return Int((nr<<times)|(nr>>(32-times)))
+        return Int((input<<times)|(input>>(32-times)))
     }
     
 }

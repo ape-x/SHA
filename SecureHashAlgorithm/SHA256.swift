@@ -132,39 +132,25 @@ class SHA256 : Convertible {
         for nr in H{
             messageDigest!+="\((nr%4294967296).hex)"
         }
-        print(messageDigest!)
     }
     
     
     func lowerSigma0(number : Int)->Int{
-        let x = rightrotate(input: number, times: 7)
-        let y = rightrotate(input: number, times: 18)
-        let z = number>>3
-        return x^y^z
+        return rightrotate(input: number, times: 7)^rightrotate(input: number, times: 18)^(number>>3)
     }
    
     func lowerSigma1(number : Int)->Int{
-       let x = rightrotate(input: number, times: 17)
-       let y = rightrotate(input: number, times: 19)
-       let z = number>>10
-        return x^y^z
+        return rightrotate(input: number, times: 17)^rightrotate(input: number, times: 19)^(number>>10)
     }
     func sigma0(number : Int)->Int{
-        let x = rightrotate(input: number, times: 2)
-        let y = rightrotate(input: number, times: 13)
-        let z = rightrotate(input: number, times: 22)
-        return x^y^z
+        return rightrotate(input: number, times: 2)^rightrotate(input: number, times: 13)^rightrotate(input: number, times: 22)
     }
     func sigma1(number : Int)->Int{
-        let x = rightrotate(input: number, times: 6)
-        let y = rightrotate(input: number, times: 11)
-        let z = rightrotate(input: number, times: 25)
-        return x^y^z
+        return rightrotate(input: number, times: 6)^rightrotate(input: number, times: 11)^rightrotate(input: number, times: 25)
     }
     
     func rightrotate(input : Int, times : Int)->Int{
-        let nr : UInt32 = UInt32(input)
-        return Int((nr>>times)|(nr<<(32-times)))
+        return Int((input>>times)|(input<<(32-times)))
     }
     
 }
