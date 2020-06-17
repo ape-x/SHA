@@ -12,7 +12,6 @@ import Foundation
 let x = false
 let s = MemoryLayout.size(ofValue: x)
 
-var ls : UInt8 = 255
 
 @discardableResult func preprocessing(input : String)->[Int]{
     var binary = [Int]()
@@ -21,63 +20,84 @@ var ls : UInt8 = 255
         binary.append(Int(c.asciiValue!))
     }
     let l = binary.count*8
-    var k = 448-((l%512)+1)
+    var k = 112-(((l/8)%128)+1)
     if k<0{
         k = k*(-1)
-        k = 512-k
+        k = 128-k
     }
-    for _ in 0...k/8{
-        binary.append(0)
-    }
-    if l/255==0{ // l is 8 bits long
-        for _ in 0..<7{
-        binary.append(0)
+    if l<256{ // l is 8 bits long
+        array.append(l)
+        for _ in 0..<15{
+        array.append(0)
         }
-        binary.append(l)
+        for _ in 0..<k{
+            array.append(0)
+        }
+        array.append(128)
     }else{//l is longer than 8 bits
-
         var buffer = l/256
         array.append(l%256)
         while true{
             array.append(buffer%256)
-            print(buffer)
             buffer = buffer/256
             if buffer<256{
+                if array.count>15{
+                    array.append(buffer+128)
+                    for _ in 0..<k{
+                        array.append(0)
+                    }
+                    break
+                }else{
                 array.append(buffer)
+                while array.count<16{
+                    array.append(0)
+                    }
+                    for _ in 0..<k{
+                        array.append(0)
+                    }
+                    array.append(128)
                 break
+                }
             }
-        }
-            while array.count<8{
-                array.append(0)
-            }
-        for i in (0..<array.count).reversed(){
-            binary.append(array[i])
         }
     }
-    print(binary.count)
+    binary+=array.reversed()
     return binary
 }
 
 var converter = Converter()
-var qq = "F56ADAA9F1F2C4D03ADAC1212F3C8FDB7752EEE1139FB4FD0C4411C633C602F1E1B1ED10F59EFE27BB1F16C21E4E5C75F7432D1D553C7BBE5A1B6C43EF4AE64F"
+var qq = "abcmalkdmlskmaldmalksmlfsmkflmlmk"
 
 var q = SHA1(seed: "abc")
 var t = SHA256(seed: "abc")
 var timer = Timer()
 
 print(Date.init())
-preprocessing(input: qq)
+print(preprocessing(input: qq))
+print(preprocessing(input: qq).count)
 print(Date.init())
 
 var r = SHA512(seed: qq)
-print(Date.init())
-r.preprocessing()
-print(Date.init())
+//print(Date.init())
+var qrt = r.preprocessing()
+//print(qrt.count)
 
-print(Date.init())
-r.hashComputation()
-print(Date.init())
-print(r.messageDigest!)
+var arr = [Bool]()
+var ar = [Int]()
+for i in 0..<qrt.count{
+    arr.append(qrt[i])
+    if arr.count == 8{
+        ar.append(converter.transformBinaryToInt(input: arr))
+        arr = []
+    }
+}
+print(ar)
+print(ar.count)
+
+//print(Date.init())
+print("\n")
+
+//print(r.messageDigest!)
 
 
 

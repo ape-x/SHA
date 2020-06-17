@@ -69,31 +69,24 @@ class SHA512 : Convertible {
 
     func hashComputation(){
         messageDigest = ""
-        var m = preprocessing()
-        var M = [[Bool]]() //
+        let m = preprocessing()
         var array = [Bool]()
         var W = [UInt64]() // Words array
-        
-        while m.isEmpty == false{ // We use a while rather than a for to optimize memory usage. This way, the maximum amount of memory we will be using is inputLength+512, rather than inputLength x 2
-                array.append(m[0])
-                m.remove(at: 0)
-                if array.count == 1024{
-                    M.append(array)
-                    array.removeAll()
-                }
-        }
- 
-        print("finished")
-        
-        for ch in 0..<M.count{
-            while M[ch].isEmpty == false{
-            array.append(M[ch][0])
-            M[ch].remove(at : 0)
-            if array.count == 64{
-                W.append(converter.transformBinaryToUInt64(input: array))
-                array.removeAll()
+        let q = m.count/1024
+
+        var upperBound = 1
+        var lowerBound = 0
+        for _ in 0..<q{
+            for s in lowerBound*1024..<1024*upperBound{
+                array.append(m[s])
+                if (s+1)%64==0{
+                    W.append(transformBinaryToUInt64(input: array))
+                    array = []
                 }
             }
+            
+            upperBound+=1
+            lowerBound+=1
         for i in 16...79{
             var number = lowerSigma1(number: W[i-2])
             number>UInt64.max-W[i-7] ? (number-=UInt64.max-W[i-7]+1) : (number+=W[i-7])
@@ -127,7 +120,6 @@ class SHA512 : Convertible {
             b=a
             T1>UInt64.max-T2 ? (a=T1-(UInt64.max-T2+1)) : (a=T1+T2)
             }
-            W.removeAll()
             let arr = [a,b,c,d,e,f,g,h]
             for s in 0..<H.count{
                 H[s]>UInt64.max-arr[s] ? (H[s]-=UInt64.max-arr[s]+1) : (H[s]+=arr[s])
