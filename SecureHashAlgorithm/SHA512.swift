@@ -44,49 +44,83 @@ class SHA512 : Convertible {
        }
      
     //Class Methods
-    
-    func preprocessing()->[Bool]{
-        var binary = [Bool]()
+   
+    func preprocessing()->[Int]{
+        var binary = [Int]()
+        var array = [Int]()
         for c in input{
-            binary+=UInt64(c.asciiValue!).binary
-            }
-        let l = binary.count
-        var k = 896-((l%1024)+1)
-        binary.append(true)
+            binary.append(Int(c.asciiValue!))
+        }
+        let l = binary.count*8
+        var k = 112-(((l/8)%128)+1)
         if k<0{
             k = k*(-1)
-            k = 1024-k
+            k = 128-k
+        }
+        if l<256{ // l is 8 bits long
+            array.append(l)
+            for _ in 0..<15{
+            array.append(0)
             }
-        for _ in 0..<k{
-            binary.append(false)
+            for _ in 0..<k{
+                array.append(0)
+            }
+            array.append(128)
+        }else{//l is longer than 8 bits
+            var buffer = l/256
+            array.append(l%256)
+            while true{
+                array.append(buffer%256)
+                buffer = buffer/256
+                if buffer<256{
+                    if array.count>15{
+                        array.append(buffer+128)
+                        for _ in 0..<k{
+                            array.append(0)
+                        }
+                        break
+                    }else{
+                    array.append(buffer)
+                    while array.count<16{
+                        array.append(0)
+                        }
+                        for _ in 0..<k{
+                            array.append(0)
+                        }
+                        array.append(128)
+                    break
+                    }
+                }
+            }
         }
-        for _ in 0..<128-l.binary.count{
-            binary.append(false)
-        }
-        binary+=l.binary
+        binary+=array.reversed()
         return binary
     }
+
 
     func hashComputation(){
         messageDigest = ""
         let m = preprocessing()
-        var array = [Bool]()
         var W = [UInt64]() // Words array
-        let q = m.count/1024
-
-        var upperBound = 1
         var lowerBound = 0
-        for _ in 0..<q{
-            for s in lowerBound*1024..<1024*upperBound{
-                array.append(m[s])
-                if (s+1)%64==0{
-                    W.append(transformBinaryToUInt64(input: array))
-                    array = []
+        var upperBound = 1
+        let rounds = m.count/128
+        for _ in 0..<rounds{
+        for i in lowerBound*128..<upperBound*128{
+            if (i+1)%8==0{
+                var nr = (m[i-7]<<56|m[i-6]<<48)
+                nr+=(m[i-5]<<40|m[i-4]<<32)
+                nr+=(m[i-3]<<24|m[i-2]<<16)
+                nr+=(m[i-1]<<8|m[i]<<0)
+                if nr<0{
+                    W.append(UInt64((nr+1)*(-1))+1)
+                }else{
+                W.append(UInt64(nr))
                 }
             }
-            upperBound+=1
-            lowerBound+=1
-            print(W[0])
+        }
+         upperBound+=1
+         lowerBound+=1
         for i in 16...79{
             var number = lowerSigma1(number: W[i-2])
             number>UInt64.max-W[i-7] ? (number-=UInt64.max-W[i-7]+1) : (number+=W[i-7])
@@ -120,6 +154,7 @@ class SHA512 : Convertible {
             b=a
             T1>UInt64.max-T2 ? (a=T1-(UInt64.max-T2+1)) : (a=T1+T2)
             }
+            W = []
             let arr = [a,b,c,d,e,f,g,h]
             for s in 0..<H.count{
                 H[s]>UInt64.max-arr[s] ? (H[s]-=UInt64.max-arr[s]+1) : (H[s]+=arr[s])
