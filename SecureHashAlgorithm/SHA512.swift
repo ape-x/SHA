@@ -84,9 +84,9 @@ class SHA512 : Convertible {
                     array = []
                 }
             }
-            
             upperBound+=1
             lowerBound+=1
+            print(W[0])
         for i in 16...79{
             var number = lowerSigma1(number: W[i-2])
             number>UInt64.max-W[i-7] ? (number-=UInt64.max-W[i-7]+1) : (number+=W[i-7])

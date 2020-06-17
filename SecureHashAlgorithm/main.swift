@@ -66,57 +66,39 @@ let s = MemoryLayout.size(ofValue: x)
 }
 
 var converter = Converter()
-var qq = "abcmalkdmlskmaldmalksmlfsmkflmlmk"
+var qq = "abc"
 
 var q = SHA1(seed: "abc")
 var t = SHA256(seed: "abc")
 var timer = Timer()
 
 print(Date.init())
-print(preprocessing(input: qq))
-print(preprocessing(input: qq).count)
+var aes = preprocessing(input: qq)
 print(Date.init())
 
 var r = SHA512(seed: qq)
-//print(Date.init())
-var qrt = r.preprocessing()
-//print(qrt.count)
-
-var arr = [Bool]()
-var ar = [Int]()
-for i in 0..<qrt.count{
-    arr.append(qrt[i])
-    if arr.count == 8{
-        ar.append(converter.transformBinaryToInt(input: arr))
-        arr = []
-    }
-}
-print(ar)
-print(ar.count)
-
-//print(Date.init())
+print(Date.init())
+print(Date.init())
 print("\n")
 
 //print(r.messageDigest!)
 
+//00011010 10111100 00111100 01100101 11010101 10101001
 
 
+//1234567891011234134
+//137 16  135 165 150 159 74  22
+//1895837225040000
+var aerr = [UInt64]()
+for i in 0..<aes.count{
+    if (i+1)%8==0{
+        var nr = (aes[i-7]<<56|aes[i-6]<<48)
+        nr+=(aes[i-5]<<40|aes[i-4]<<32)
+        nr+=(aes[i-3]<<24|aes[i-2]<<16)
+        nr+=(aes[i-1]<<8|aes[i]<<0)
+        aerr.append(UInt64(nr))
+    }
+}
 
-/*
- if q>1 && q%8 == 0{
-     for _ in 0..<k/8{
-         array.append(0)
-     }
-     for _ in 0..<64-q{
-         array.append(0)
-     }
- }else if q>1 && q%8 != 0{
-     for _ in 0..<k/8{
-     array.append(0)
-     }
-     for _ in 0..<64-q-1{
-         array.append(0)
-     }
- }
-
- */
+print(aerr)
+print(aerr.count)
