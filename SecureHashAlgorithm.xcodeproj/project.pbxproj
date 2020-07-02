@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B81688D424AE693600B9A220 /* CSHA512.c in Sources */ = {isa = PBXBuildFile; fileRef = B81688D324AE693600B9A220 /* CSHA512.c */; };
 		B8806BC1248A9E3400E760DE /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8806BC0248A9E3400E760DE /* main.swift */; };
 		B8806BC8248A9E4000E760DE /* SHA1.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8806BC7248A9E4000E760DE /* SHA1.swift */; };
 		B8806BCA248A9E7600E760DE /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8806BC9248A9E7600E760DE /* Int+Extensions.swift */; };
@@ -30,6 +31,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B81688D124AE693600B9A220 /* SecureHashAlgorithm-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SecureHashAlgorithm-Bridging-Header.h"; sourceTree = "<group>"; };
+		B81688D224AE693600B9A220 /* CSHA512.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CSHA512.h; sourceTree = "<group>"; };
+		B81688D324AE693600B9A220 /* CSHA512.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = CSHA512.c; sourceTree = "<group>"; };
 		B8806BBD248A9E3400E760DE /* SecureHashAlgorithm */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SecureHashAlgorithm; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8806BC0248A9E3400E760DE /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		B8806BC7248A9E4000E760DE /* SHA1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SHA1.swift; sourceTree = "<group>"; };
@@ -76,6 +80,9 @@
 				B8806BC7248A9E4000E760DE /* SHA1.swift */,
 				B8806BD2248BC52F00E760DE /* SHA256.swift */,
 				B8806BD4248D72D300E760DE /* SHA512.swift */,
+				B81688D224AE693600B9A220 /* CSHA512.h */,
+				B81688D324AE693600B9A220 /* CSHA512.c */,
+				B81688D124AE693600B9A220 /* SecureHashAlgorithm-Bridging-Header.h */,
 			);
 			path = SecureHashAlgorithm;
 			sourceTree = "<group>";
@@ -139,6 +146,7 @@
 				TargetAttributes = {
 					B8806BBC248A9E3400E760DE = {
 						CreatedOnToolsVersion = 11.4.1;
+						LastSwiftMigration = 1150;
 					};
 				};
 			};
@@ -170,6 +178,7 @@
 				B8806BD3248BC52F00E760DE /* SHA256.swift in Sources */,
 				B8806BCC248A9E8D00E760DE /* Converter.swift in Sources */,
 				B8806BCF248A9ED600E760DE /* Convertible.swift in Sources */,
+				B81688D424AE693600B9A220 /* CSHA512.c in Sources */,
 				B8806BC1248A9E3400E760DE /* main.swift in Sources */,
 				B8806BD5248D72D300E760DE /* SHA512.swift in Sources */,
 				B8806BD7248DC49F00E760DE /* UInt64+Extensions.swift in Sources */,
@@ -295,8 +304,16 @@
 		B8806BC5248A9E3400E760DE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SecureHashAlgorithm/SecureHashAlgorithm-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -304,8 +321,15 @@
 		B8806BC6248A9E3400E760DE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SecureHashAlgorithm/SecureHashAlgorithm-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
